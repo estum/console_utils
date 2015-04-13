@@ -109,7 +109,7 @@ exap.post("api/signup.json", nil, user: { name: "Guest" }).preview
 
 **Note:** The `remo` requester supports the auto-token feature, but still fetchs tokens from a local DB.
 
-## BetchUtils
+## BenchUtils
 
 Access to globally shared Benchmark.ips object, which works out of a block and allows to change the stack “on the fly” and to keep the result during the work.
 
