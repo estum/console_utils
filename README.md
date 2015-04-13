@@ -109,7 +109,7 @@ exap.post("api/signup.json", nil, user: { name: "Guest" }).preview
 
 **Note:** The `remo` requester supports the auto-token feature, but still fetchs tokens from a local DB.
 
-## BetchUtils
+## BenchUtils
 
 Access to globally shared Benchmark.ips object, which works out of a block and allows to change the stack “on the fly” and to keep the result during the work.
 
@@ -233,7 +233,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-1. Fork it ( https://github.com/[my-github-username]/console_utils/fork )
+1. Fork it ( https://github.com/estum/console_utils/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
