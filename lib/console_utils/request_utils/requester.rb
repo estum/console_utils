@@ -85,16 +85,18 @@ module ConsoleUtils::RequestUtils #:nodoc:
       @_args
     end
 
+    protected
+
+    # Copies to pasteboard
+    def pbcopy(content = nil)
+      content ||= to_body
+      IO.popen('pbcopy', 'w') { |io| io << content.to_s }
+      puts PBCOPY_MESSAGE
+    end
 
     private
 
     PBCOPY_MESSAGE = Term::ANSIColor.green(" \u27A4 Response body copied to pasteboard\n").freeze
-
-    # Copies to pasteboard
-    def pbcopy(content)
-      IO.popen('pbcopy', 'w') { |io| io << content.to_s }
-      puts PBCOPY_MESSAGE
-    end
 
     COMPLETE_IN = Term::ANSIColor.green("Complete in %s").freeze
 
