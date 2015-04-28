@@ -134,9 +134,15 @@ module ConsoleUtils
     end
     alias_method :user_class, :user_model
 
-    # Finds +user_model+ by +user_primary_key+
+    # Finds +user_model+ by +user_primary_key+.
+    # If the first argument is <tt>:any</tt>, gets a random user.
     def find_user(id, scope: nil)
-      (scope || user_model).where(user_primary_key => id).first!
+      case id
+      when :any
+        (scope || user_model).anyone
+      else
+        (scope || user_model).where(user_primary_key => id).first!
+      end
     end
 
     def enabled_modules
