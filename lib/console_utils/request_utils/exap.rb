@@ -23,7 +23,6 @@ module ConsoleUtils::RequestUtils #:nodoc:
 
     def resp_wrap(meth, url, *args)
       @url, @_args = url, args
-      p args
       app.send(meth, url, *normalize_args)
       self
     end

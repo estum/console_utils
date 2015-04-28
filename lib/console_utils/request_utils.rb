@@ -12,6 +12,11 @@ module ConsoleUtils #:nodoc:
     autoload :Exap
     autoload :Remo
 
+    autoload :JSONOutput do
+      autoload :Default
+      autoload :Jq
+    end
+
     # :call-seq:
     #   autoken(id)
     #   autoken(:any)

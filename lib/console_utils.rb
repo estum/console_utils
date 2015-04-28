@@ -48,9 +48,9 @@ module ConsoleUtils
     :OtherUtils
   ]
 
-  MODULES.each { |mod| autoload mod }
-
   JSON_FORMATTERS = %i(default jq)
+
+  MODULES.each { |mod| autoload mod }
 
   # :section: Configuration
 
