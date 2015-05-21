@@ -1,8 +1,9 @@
-require "active_support"
-require "active_support/rails"
+require 'active_support'
+require 'active_support/rails'
 require 'term/ansicolor'
 require 'console_utils/core_ext/array_to_proc'
-require "console_utils/version"
+require 'console_utils/repl_context'
+require 'console_utils/version'
 
 begin
   require "awesome_print"
@@ -121,7 +122,6 @@ module ConsoleUtils
     def config
       self
     end
-    private :config
 
     # :method: self.configure
     def configure
@@ -155,10 +155,20 @@ module ConsoleUtils
     end
 
     # Setup enabled modules by extending given context
-    def setup_modules_to(context = nil)
-      context = yield() if block_given?
+    def setup_modules_to(context = nil, &block)
+      context, block = block, context if !block_given? && context.respond_to?(:call)
+      context ||= block.call
+
       puts "Console instance: #{context.inspect}" if ENV["CONSOLE_UTILS_DEBUG"]
       each_enabled_module { |mod| context.send(:extend, mod) }
+    end
+
+    def irb!
+      setup_modules_to(ReplContext.instance.irb!)
+    end
+
+    def pry!
+      setup_modules_to(ReplContext.instance.pry!)
     end
   end
 

@@ -23,13 +23,7 @@ module ConsoleUtils
     end
 
     console do |app|
-      ConsoleUtils.setup_modules_to do
-        if defined?(Pry)
-          TOPLEVEL_BINDING.eval('self')
-        else
-          Rails.application.config.console::ExtendCommandBundle
-        end
-      end
+      ConsoleUtils.setup_modules_to(ReplContext.instance)
     end
   end
 end
