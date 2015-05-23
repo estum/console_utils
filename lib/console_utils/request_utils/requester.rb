@@ -12,6 +12,7 @@ module ConsoleUtils::RequestUtils #:nodoc:
     COMPLETE_IN      = Term::ANSIColor.green("Complete in %s").freeze
     TRANSFERED       = Term::ANSIColor.cyan("Transfered: %s").freeze
 
+    class_attribute :default_params
     attr_reader :url
 
     def preview(mth = nil)
@@ -54,16 +55,9 @@ module ConsoleUtils::RequestUtils #:nodoc:
     protected
 
     def normalize_args
-      if ConsoleUtils.auto_token
-        uid = (@_args[0].is_a?(Hash) || @_args.empty?) ? ConsoleUtils.default_uid : @_args.shift
-        if uid.present?
-          printf(AUTOAUTH_FORMAT, uid, @_args)
-          opts = @_args.extract_options!
-          @_args.unshift(opts.tap { |x| x[ConsoleUtils.token_param] ||= __getobj__.autoken(uid) })
-        end
-      end
-
-      @_args
+      RequestParams.new(*@_args) { |uid| autoken(uid) }.
+        with_default(default_params).
+        to_a
     end
 
     # Copies to pasteboard
@@ -87,7 +81,7 @@ module ConsoleUtils::RequestUtils #:nodoc:
       @_size = nil
     end
 
-    private_constant :REQUEST_METHODS, :AUTOAUTH_FORMAT, :PBCOPY_MESSAGE,
+    private_constant :REQUEST_METHODS, :PBCOPY_MESSAGE,
                      :NO_RESPONSE, :COMPLETE_IN, :TRANSFERED,
                      :INFO_FORMAT
   end

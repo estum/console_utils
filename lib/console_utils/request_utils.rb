@@ -8,6 +8,7 @@ module ConsoleUtils #:nodoc:
   module RequestUtils
     extend ActiveSupport::Autoload
 
+    autoload :RequestParams
     autoload :Requester
     autoload :Exap
     autoload :Remo

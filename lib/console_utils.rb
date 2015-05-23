@@ -2,6 +2,7 @@ require 'active_support'
 require 'active_support/rails'
 require 'term/ansicolor'
 require 'console_utils/core_ext/array_to_proc'
+require 'console_utils/core_ext/local_values'
 require 'console_utils/repl_context'
 require 'console_utils/version'
 

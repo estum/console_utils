@@ -6,12 +6,3 @@ unless Binding.method_defined?(:local_values)
     end
   end
 end
-
-unless Kernel.method_defined?(:local_values)
-  module Kernel
-    # Returns a hash with symbol keys that maps local variable names to their corresponding values.
-    private def local_values
-      binding.local_values
-    end
-  end
-end
