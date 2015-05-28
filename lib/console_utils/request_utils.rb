@@ -24,9 +24,7 @@ module ConsoleUtils #:nodoc:
     #
     # Returns user's token by primary key. Use <tt>:any</tt> to get random user.
     def autoken(id)
-      user = id == :any ? user_scope.anyone : ConsoleUtils.find_user(id, scope: user_scope)
-      puts "User #{user.public_send(ConsoleUtils.user_primary_key)}" if id == :any
-      user.public_send(ConsoleUtils.user_token_column)
+      ConsoleUtils.auto_token_for(id)
     end
 
     # :call-seq:
@@ -72,12 +70,6 @@ module ConsoleUtils #:nodoc:
     # See +exap+ examples.
     def remo
       Remo.new(self)
-    end
-
-    private
-
-    def user_scope
-      ConsoleUtils.user_model.select([:id, :auth_token])
     end
   end
 end

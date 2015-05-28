@@ -90,6 +90,11 @@ module ConsoleUtils
   mattr_accessor(:token_param) { :token }
   ##
   # :attr:
+  # A plain string of the default token used to authorize user
+  # (default: <tt>nil</tt>)
+  mattr_accessor(:default_token)
+  ##
+  # :attr:
   # JSON formatter used in API request helpers
   # (<tt>:default</tt> or <tt>:jq</tt>)
   mattr_accessor(:json_formatter) { :default }
@@ -120,30 +125,11 @@ module ConsoleUtils
   # :section: Class Methods
 
   class << self
-    def config
-      self
-    end
+    alias_method :config, :itself
 
     # :method: self.configure
     def configure
       yield(config)
-    end
-
-    # Returns User's class set in the <tt>:user_class_name</tt>
-    def user_model
-      Object.const_get(user_model_name)
-    end
-    alias_method :user_class, :user_model
-
-    # Finds +user_model+ by +user_primary_key+.
-    # If the first argument is <tt>:any</tt>, gets a random user.
-    def find_user(id, scope: nil)
-      case id
-      when :any
-        (scope || user_model).anyone
-      else
-        (scope || user_model).where(user_primary_key => id).first!
-      end
     end
 
     def enabled_modules
@@ -155,6 +141,47 @@ module ConsoleUtils
       enabled_modules.each { |mod| yield const_get(mod) }
     end
 
+    # Returns User's class set in the <tt>:user_class_name</tt>
+    def user_model
+      Object.const_get(user_model_name)
+    end
+    alias_method :user_class, :user_model
+
+    def user_scope(scope = nil)
+      case scope
+      when nil    then user_model
+      when Symbol then user_model.public_send(scope)
+                  else user_model.all.merge(scope)
+      end
+    end
+
+    # Finds +user_model+ by +user_primary_key+.
+    # If the first argument is <tt>:any</tt>, gets a random user.
+    def find_user(id, scope: nil)
+      if id == :any
+        user_scope(scope).anyone.tap do |u|
+          puts "random user #{user_primary_key}: #{u.public_send(user_primary_key)}"
+        end
+      else
+        user_scope(scope).where(user_primary_key => id).first!
+      end
+    end
+
+    def auto_token_for(id)
+      user = find_user(id, scope: user_model.select([:id, user_token_column]))
+      user.public_send(user_token_column)
+    end
+
+    # Setup enabled modules for IRB context
+    def irb!
+      setup_modules_to(ReplContext.instance.irb!)
+    end
+
+    # Setup enabled modules for Pry context
+    def pry!
+      setup_modules_to(ReplContext.instance.pry!)
+    end
+
     # Setup enabled modules by extending given context
     def setup_modules_to(context = nil, &block)
       context, block = block, context if !block_given? && context.respond_to?(:call)
@@ -162,14 +189,6 @@ module ConsoleUtils
 
       puts "Console instance: #{context.inspect}" if ENV["CONSOLE_UTILS_DEBUG"]
       each_enabled_module { |mod| context.send(:extend, mod) }
-    end
-
-    def irb!
-      setup_modules_to(ReplContext.instance.irb!)
-    end
-
-    def pry!
-      setup_modules_to(ReplContext.instance.pry!)
     end
   end
 
