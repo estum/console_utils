@@ -1,5 +1,5 @@
 require 'active_support'
-require 'active_support/rails'
+require 'active_support/core_ext'
 require 'term/ansicolor'
 require 'console_utils/core_ext/array_to_proc'
 require 'console_utils/core_ext/local_values'

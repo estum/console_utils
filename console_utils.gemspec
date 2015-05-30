@@ -17,7 +17,7 @@ Gem::Specification.new do |spec|
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "rails", ">= 4.1", "< 5"
+  spec.add_dependency "activesupport", ">= 4.1", "< 5"
   spec.add_dependency "term-ansicolor"
   spec.add_dependency "awesome_print"
   spec.add_dependency "benchmark-ips"
