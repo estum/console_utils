@@ -57,7 +57,6 @@ end
 
 ### Options:
 
-* `auto_token` - Enable auto-fetch of user's auth token in requests (default: `true`)
 * `curl_bin` - Binary path to curl (using in remote requests). (default: `"curl"`)
 * `curl_silence` - Disable print out generated curl command with remote requests. (default: `false`)
 * `default_token` - A plain string of the default token used to authorize user (default: `nil`)
@@ -71,6 +70,9 @@ end
 * `user_model_name` - A name of user's model (default: `:User`)
 * `user_primary_key` - A primary key of user's model (default: `:id`)
 * `user_token_column` - A column name with a user's token. Using by request tools. (default: `:auth_token`)
+* `request_auto_auth` - Enable the auth automator with the `exap` (default: `true`)
+* `auth_automator` - Specifies a callable object, which will hook requests with credentials. There are two built-in implementations: the default one `ConsoleUtils::RequestUtils::DefaultAuthAutomator` and the `ConsoleUtils::RequestUtils::SimpleTokenAutomator`, which is useful when using the `simple_token_automator` gem.
+
 
 ## RequestUtils
 

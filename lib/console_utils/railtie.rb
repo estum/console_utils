@@ -7,9 +7,9 @@ module ConsoleUtils
     #:nodoc: all
     config.console_utils = ActiveSupport::OrderedOptions.new
 
-    initializer 'console_utils.logger' do
-      ActiveSupport.on_load(:console_utils) { self.logger = ::Rails.logger }
-    end
+    # initializer 'console_utils.logger' do
+    #   ActiveSupport.on_load(:console_utils) { self.logger = ::Rails.logger }
+    # end
 
     initializer "console_utils.set_configs" do |app|
       options = app.config.console_utils

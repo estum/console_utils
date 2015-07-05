@@ -1,55 +1,50 @@
 module ConsoleUtils::RequestUtils
   class RequestParams
-    def initialize(uid_or_params = true, params = nil, headers_or_env = nil)
-      if ConsoleUtils.auto_token
-        @uid = case uid_or_params
-               when Numeric, true, false, nil then uid_or_params
-               when headers_or_env.nil?       then need_shift!
-               end
-      else
-        need_shift!
+    attr_accessor :uid
+
+    def initialize(uid_or_params = true, params = nil, headers = nil)
+      if uid_or_params.is_a? Hash
+        headers, params, uid_or_params = [params, uid_or_params, nil]
       end
 
-      params, headers_or_env = [uid_or_params, params] if need_shift?
+      @params = params
+      @headers = headers
+      @uid = auto_auth? && ((uid_or_params.nil? || uid_or_params == true) ? ConsoleUtils.default_uid : uid_or_params)
 
-      @params = params.is_a?(Hash) ? params : {}
-      @headers = headers_or_env.to_h
+      ConsoleUtils.logger.debug { "#{uid}, #{params()}, #{headers()}" }
 
-      if need_default_token?
-        use_token ConsoleUtils.default_token
-      else
-        @uid = ConsoleUtils.default_uid if need_default_uid?
-        use_token ConsoleUtils.auto_token_for(@uid) if @uid.present?
-      end
+      auth_automator.(self) if can_auto_auth?
+    end
+
+    def params
+      @params ||= {}
+    end
+
+    def headers
+      @headers ||= {}
     end
 
     def to_a
-      [@params.presence, @headers.presence].tap(&:compact!)
-    end
-
-    def use_token value
-      @params[ConsoleUtils.token_param] ||= value
+      [params, headers.presence].tap(&:compact!)
     end
 
     def with_default(default_params = nil)
-      @params.merge!(default_params.to_h)
+      params.merge!(default_params.to_h)
       to_a
     end
 
-    def need_default_uid?
-      @uid == true && ConsoleUtils.default_token.nil?
+    def can_auto_auth?
+      auto_auth? && uid && auth_automator.respond_to?(:call)
     end
 
-    def need_default_token?
-      @uid == true && ConsoleUtils.default_token.present?
+    private
+
+    def auto_auth?
+      ConsoleUtils.request_auto_auth
     end
 
-    def need_shift!
-      @need_shift = true
-    end
-
-    def need_shift?
-      !!@need_shift
+    def auth_automator
+      ConsoleUtils.auth_automator
     end
   end
 end

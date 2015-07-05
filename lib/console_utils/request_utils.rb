@@ -18,6 +18,9 @@ module ConsoleUtils #:nodoc:
       autoload :Jq
     end
 
+    autoload :DefaultAuthAutomator, "console_utils/request_utils/auth_automators"
+    autoload :SimpleTokenAutomator, "console_utils/request_utils/auth_automators"
+
     # :call-seq:
     #   autoken(id)
     #   autoken(:any)

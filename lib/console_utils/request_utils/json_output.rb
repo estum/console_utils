@@ -31,7 +31,7 @@ module ConsoleUtils::RequestUtils
     # The default formatter uses standart JSON library to output prettified JSON
     class Default < Formatter
       def format(body) #:nodoc:
-        jj JSON(body)
+        JSON.pretty_generate JSON(body), :allow_nan => true, :max_nesting => false
       rescue JSON::GeneratorError => e
         warn "Warning: Failed to format a json.", e.message, body
         body.to_s
