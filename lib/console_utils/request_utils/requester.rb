@@ -16,13 +16,10 @@ module ConsoleUtils::RequestUtils #:nodoc:
 
     def preview(mth = nil)
       if output = to_s.presence
-        JSONOutput.formatter.(output) do |formatted|
-          @formatted = formatted
-          puts @formatted
-          show_complete_in!
-          show_transfered!
-          yield(self) if block_given?
-        end
+        JSONOutput.formatter.(output)
+        show_complete_in!
+        show_transfered!
+        yield(self) if block_given?
       else
         puts NO_RESPONSE
       end
@@ -30,7 +27,7 @@ module ConsoleUtils::RequestUtils #:nodoc:
 
     # Copies to pasteboard
     def pbcopy(content = nil)
-      content ||= @formatted
+      content ||= JSONOutput::Default.instance.format(to_s)
       IO.popen('pbcopy', 'w') { |io| io << content.to_s }
       puts PBCOPY_MESSAGE
     end
