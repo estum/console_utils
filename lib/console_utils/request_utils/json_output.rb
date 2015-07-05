@@ -8,7 +8,12 @@ module ConsoleUtils::RequestUtils
 
       # Prints formatted JSON to stdout.
       def call(body)
-        puts format(body)
+        formatted = format(body)
+        if block_given?
+          yield(formatted)
+        else
+          puts formatted
+        end
       end
 
       # Formats a given JSON string

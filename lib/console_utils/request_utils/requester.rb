@@ -16,13 +16,23 @@ module ConsoleUtils::RequestUtils #:nodoc:
 
     def preview(mth = nil)
       if output = to_s.presence
-        JSONOutput.formatter.(output)
-        show_complete_in!
-        show_transfered!
-        yield(self) if block_given?
+        JSONOutput.formatter.(output) do |formatted|
+          @formatted = formatted
+          puts @formatted
+          show_complete_in!
+          show_transfered!
+          yield(self) if block_given?
+        end
       else
         puts NO_RESPONSE
       end
+    end
+
+    # Copies to pasteboard
+    def pbcopy(content = nil)
+      content ||= @formatted
+      IO.popen('pbcopy', 'w') { |io| io << content.to_s }
+      puts PBCOPY_MESSAGE
     end
 
     def print_info
@@ -57,13 +67,6 @@ module ConsoleUtils::RequestUtils #:nodoc:
       RequestParams.new(*@_args) { |uid| autoken(uid) }.
         with_default(default_params).
         to_a
-    end
-
-    # Copies to pasteboard
-    def pbcopy(content = nil)
-      content ||= to_body
-      IO.popen('pbcopy', 'w') { |io| io << content.to_s }
-      puts PBCOPY_MESSAGE
     end
 
     private
