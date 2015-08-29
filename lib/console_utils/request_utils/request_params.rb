@@ -29,7 +29,14 @@ module ConsoleUtils::RequestUtils
     end
 
     def with_default(default_params = nil)
-      params.merge!(default_params.to_h)
+      default_headers = default_params.delete(:headers) if default_params.is_a?(Hash)
+
+      if params.is_a?(Hash)
+        params.merge!(default_params.to_h)
+      else
+        headers.merge!(default_headers.to_h)
+      end
+
       to_a
     end
 

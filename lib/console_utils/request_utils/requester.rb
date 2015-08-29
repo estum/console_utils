@@ -11,7 +11,7 @@ module ConsoleUtils::RequestUtils #:nodoc:
     COMPLETE_IN      = Term::ANSIColor.green("Complete in %s").freeze
     TRANSFERED       = Term::ANSIColor.cyan("Transfered: %s").freeze
 
-    class_attribute :default_params
+    class_attribute :default_params, instance_writer: false
     attr_reader :url
 
     def preview(mth = nil)
