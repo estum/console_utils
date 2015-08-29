@@ -13,7 +13,7 @@ module ConsoleUtils::RequestUtils
 
       ConsoleUtils.logger.debug { "#{uid}, #{params()}, #{headers()}" }
 
-      auth_automator.(self) if can_auto_auth?
+      auth_automator.(self)
     end
 
     def params
