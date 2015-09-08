@@ -13,13 +13,22 @@ module ConsoleUtils::RequestUtils #:nodoc:
     end
 
     def inspect
-      format INSPECT_FORMAT, request.path, response.status
+      format INSPECT_FORMAT, request.try(:path), response.try(:status)
     end
 
     private
 
-    delegate :controller, to: :app, prefix: true, allow_nil: true
-    delegate :request, :response, to: :app_controller, allow_nil: true
+    def request
+      app.controller.try(:request)
+    end
+
+    def response
+      app.controller.try(:response)
+    end
+
+    def response_body
+      app.controller.try(:response_body) || response.try(:body)
+    end
 
     def resp_wrap(meth, url, *args)
       @url, @_args = url, args
