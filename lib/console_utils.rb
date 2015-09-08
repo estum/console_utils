@@ -50,6 +50,7 @@ module ConsoleUtils
 
   MODULES = [
     :ActiveRecordUtils,
+    :JSONOutput,
     :RequestUtils,
     :BenchUtils,
     :OtherUtils

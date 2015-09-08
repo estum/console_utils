@@ -13,11 +13,6 @@ module ConsoleUtils #:nodoc:
     autoload :Exap
     autoload :Remo
 
-    autoload :JSONOutput do
-      autoload :Default
-      autoload :Jq
-    end
-
     autoload :DefaultAuthAutomator, "console_utils/request_utils/auth_automators"
     autoload :SimpleTokenAutomator, "console_utils/request_utils/auth_automators"
 
