@@ -3,7 +3,6 @@ require 'active_support/core_ext/numeric'
 
 module ConsoleUtils::RequestUtils #:nodoc:
   class Requester < SimpleDelegator
-    REQUEST_METHODS  = %i(get post put delete patch).freeze
     INFO_HASH_FIELDS = %i(url size time human_size human_time).freeze
     INFO_FORMAT      = "%#-.50{url} | %#10{human_size} | %#10{human_time}\n".freeze
     NO_RESPONSE      = Term::ANSIColor.red(" \u27A7 Empty response's body.").freeze
@@ -80,7 +79,7 @@ module ConsoleUtils::RequestUtils #:nodoc:
       @_size = nil
     end
 
-    private_constant :REQUEST_METHODS, :PBCOPY_MESSAGE,
+    private_constant :PBCOPY_MESSAGE,
                      :NO_RESPONSE, :COMPLETE_IN, :TRANSFERED,
                      :INFO_FORMAT
   end

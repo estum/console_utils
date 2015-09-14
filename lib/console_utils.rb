@@ -126,6 +126,11 @@ module ConsoleUtils
   mattr_accessor(:request_auto_auth) { true }
 
   # :attr:
+  # Request methods to delegate with requester
+  # (default: <tt>[:get, :post, :put, :delete, :patch, :head]</tt>)
+  mattr_accessor(:request_methods) {  %i(get post put delete patch head) }
+
+  # :attr:
   # Specifies a callable object, which will hook requests with
   # credentials. There are two built-in implementations: the default
   # one <tt>ConsoleUtils::RequestUtils::DefaultAuthAutomator</tt> and

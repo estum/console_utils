@@ -4,7 +4,7 @@ module ConsoleUtils::RequestUtils #:nodoc:
   class Exap < Requester
     INSPECT_FORMAT = "<Local: %s (%s)>".freeze
 
-    REQUEST_METHODS.each do |reqm|
+    ConsoleUtils.request_methods.each do |reqm|
       define_method(reqm) { |*args| resp_wrap(reqm, *args) }
     end
 
