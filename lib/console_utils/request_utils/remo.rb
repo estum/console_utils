@@ -9,7 +9,7 @@ module ConsoleUtils::RequestUtils #:nodoc:
 
     attr_reader :request_method
 
-    REQUEST_METHODS.each do |reqm|
+    ConsoleUtils.request_methods.each do |reqm|
       define_method(reqm) do |url, *args|
         @_args = args
         @url   = urlify(url, *normalize_args)
