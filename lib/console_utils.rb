@@ -118,12 +118,17 @@ module ConsoleUtils
 
   # :attr:
   # Output logger (<tt>Logger.new(STDOUT)</tt> by default)
-  mattr_accessor(:logger) { Logger.new(STDOUT) }
+  mattr_accessor(:logger) { defined?(Rails) ? Rails.logger : Logger.new(STDOUT) }
 
   # :attr:
   # Enable the auth automator with the "exap"
   # (default: <tt>true</tt>)
   mattr_accessor(:request_auto_auth) { true }
+
+  # :attr:
+  # Request methods to delegate with requester
+  # (default: <tt>[:get, :post, :put, :delete, :patch, :head]</tt>)
+  mattr_accessor(:request_methods) {  %i(get post put delete patch head) }
 
   # :attr:
   # Specifies a callable object, which will hook requests with
