@@ -118,7 +118,7 @@ module ConsoleUtils
 
   # :attr:
   # Output logger (<tt>Logger.new(STDOUT)</tt> by default)
-  mattr_accessor(:logger) { ActiveSupport::Logger.new(STDOUT) }
+  mattr_accessor(:logger) { Logger.new(STDOUT) }
 
   # :attr:
   # Enable the auth automator with the "exap"
@@ -216,7 +216,7 @@ module ConsoleUtils
         logger.level = Logger::WARN
       end
 
-      each_enabled_module { |mod| mod.send(:extend_object, context) }
+      each_enabled_module { |mod| context.send(:extend, mod) }
     end
   end
 
