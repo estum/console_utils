@@ -2,12 +2,12 @@ require 'spec_helper'
 
 describe ConsoleUtils do
   it 'has a version number' do
-    expect(ConsoleUtils::VERSION).not_to be nil
+    ConsoleUtils::VERSION.wont_be_nil
   end
 
-  it { is_expected.to have_attributes(request_methods: %i(get post put delete patch head)) }
-
-  xit 'does something useful' do
-    expect(false).to eq(true)
+  it 'should contain the base request methods' do
+    %i(get post put delete patch head).each do |rm|
+      ConsoleUtils.request_methods.must_include rm
+    end
   end
 end

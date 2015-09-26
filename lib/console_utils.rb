@@ -1,9 +1,9 @@
 require 'active_support'
 require 'active_support/core_ext'
+require 'active_support/tagged_logging'
 require 'term/ansicolor'
 require 'console_utils/core_ext/array_to_proc'
 require 'console_utils/core_ext/local_values'
-require 'console_utils/repl_context'
 require 'console_utils/version'
 
 begin
@@ -118,7 +118,7 @@ module ConsoleUtils
 
   # :attr:
   # Output logger (<tt>Logger.new(STDOUT)</tt> by default)
-  mattr_accessor(:logger) { Logger.new(STDOUT) }
+  mattr_accessor(:logger) { ActiveSupport::TaggedLogging.new(Logger.new(STDOUT)) }
 
   # :attr:
   # Enable the auth automator with the "exap"
@@ -145,17 +145,18 @@ module ConsoleUtils
     alias_method :config, :itself
 
     # :method: self.configure
-    def configure
+    def configure # :yields:
       yield(config)
     end
 
-    def enabled_modules
-      ConsoleUtils::MODULES - disabled_modules
-    end
+    def enabled_modules # :yields:
+      unless block_given?
+        return to_enum(__method__) { ConsoleUtils::MODULES.size - disabled_modules.dize }
+      end
 
-    # Yields each enabled module with a given block
-    def each_enabled_module
-      enabled_modules.each { |mod| yield const_get(mod) }
+      (ConsoleUtils::MODULES - disabled_modules).each do |mod|
+        yield(const_get(mod))
+      end
     end
 
     # Returns User's class set in the <tt>:user_class_name</tt>
@@ -189,40 +190,38 @@ module ConsoleUtils
       user.public_send(user_token_column)
     end
 
-    # Setup enabled modules for IRB context
-    def irb!
-      setup_modules_to(ReplContext.instance.irb!)
-    end
-
     # Setup enabled modules for Pry context
     def pry!
-      setup_modules_to(ReplContext.instance.pry!)
+      setup_modules_to { TOPLEVEL_BINDING.eval('self') }
     end
 
     # Setup enabled modules by extending given context
-    def setup_modules_to(context = nil)
-      context, block = block, context if !block_given? && context.respond_to?(:call)
-      context ||= yield if block_given?
+    def setup_modules_to # :yields:
+      logger.level = Logger::WARN
 
-      if context.nil?
-        warn "[ConsoleUtils] Trying to setup with empty context"
-        return
+      logger.tagged(name) do
+        unless block_given?
+          logger.warn { "Trying to setup with empty context" }
+          return
+        end
+
+        if ENV["CONSOLE_UTILS_DEBUG"] == "1"
+          logger.level = Logger::DEBUG
+          logger.debug { "Console instance: #{yield().inspect}" }
+        end
+
+        enabled_modules do |mod|
+          logger.debug { "extending with #{mod.inspect}" }
+          yield().extend(mod)
+        end
       end
-
-      if ENV["CONSOLE_UTILS_DEBUG"] == "1"
-        logger.level = Logger::DEBUG
-        logger.debug { "Console instance: #{context.inspect} (#{ReplContext.instance.initialized_to})" }
-      else
-        logger.level = Logger::WARN
-      end
-
-      each_enabled_module { |mod| context.send(:extend, mod) }
     end
+
   end
 
   ActiveSupport.run_load_hooks(:console_utils, self)
 end
 
-if defined? Rails
+if defined?(Rails)
   require "console_utils/railtie"
 end

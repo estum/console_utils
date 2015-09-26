@@ -1,6 +1,8 @@
 # coding: utf-8
+
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+
 require 'console_utils/version'
 
 Gem::Specification.new do |spec|
@@ -14,16 +16,18 @@ Gem::Specification.new do |spec|
   spec.homepage      = "https://github.com/estum/console_utils"
   spec.license       = "MIT"
 
-  spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
+  spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(spec)/}) }
   spec.require_paths = ["lib"]
+  spec.required_ruby_version = ">= 2.1"
 
   spec.add_dependency "activesupport", ">= 4.1", "< 5"
   spec.add_dependency "term-ansicolor"
   spec.add_dependency "awesome_print"
   spec.add_dependency "benchmark-ips"
+  spec.add_dependency "pry-rails"
   # spec.add_dependency 'sourcify', '~> 0.6.0.rc4'
 
-  spec.add_development_dependency "bundler", "~> 1.9"
-  spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rdoc"
+  spec.add_development_dependency "appraisal"
+  spec.add_development_dependency "minitest"
 end

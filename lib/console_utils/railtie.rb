@@ -3,13 +3,8 @@ require "rails/railtie"
 module ConsoleUtils
   ##
   # Console Utils Railtie
-  class Railtie < ::Rails::Railtie
-    #:nodoc: all
+  class Railtie < ::Rails::Railtie #:nodoc: all
     config.console_utils = ActiveSupport::OrderedOptions.new
-
-    # initializer 'console_utils.logger' do
-    #   ActiveSupport.on_load(:console_utils) { self.logger = ::Rails.logger }
-    # end
 
     initializer "console_utils.set_configs" do |app|
       options = app.config.console_utils
@@ -18,12 +13,12 @@ module ConsoleUtils
       options.disabled_modules << :ActiveRecordUtils unless defined?(ActiveRecord)
 
       ActiveSupport.on_load(:console_utils) do
-        options.each { |k,v| send(:"#{k}=", v) }
+        options.each { |k, v| public_send(:"#{k}=", v) }
       end
     end
 
-    console do |app|
-      ConsoleUtils.setup_modules_to(ReplContext.instance)
+    console do
+      ConsoleUtils.pry!
     end
   end
 end
