@@ -1,5 +1,3 @@
-require "rails/railtie"
-
 module ConsoleUtils
   ##
   # Console Utils Railtie
