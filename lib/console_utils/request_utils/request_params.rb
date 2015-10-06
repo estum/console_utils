@@ -3,12 +3,14 @@ module ConsoleUtils::RequestUtils
     attr_accessor :uid
 
     def initialize(uid_or_params = true, params = nil, headers = nil)
+      # puts "Request params: uid_or_params=#{uid_or_params} | params=#{params} | headers=#{headers}"
+
       if uid_or_params.is_a? Hash
         headers, params, uid_or_params = [params, uid_or_params, nil]
       end
 
-      @params = params
-      @headers = headers
+      @params  = params  if params
+      @headers = headers if headers
       @uid = auto_auth? && ((uid_or_params.nil? || uid_or_params == true) ? ConsoleUtils.default_uid : uid_or_params)
 
       ConsoleUtils.logger.debug { "#{uid}, #{params()}, #{headers()}" }

@@ -50,13 +50,15 @@ module ConsoleUtils
 
   MODULES = [
     :ActiveRecordUtils,
-    :JSONOutput,
     :RequestUtils,
     :BenchUtils,
     :OtherUtils
   ]
 
   MODULES.each { |mod| autoload mod }
+
+  autoload :JSONOutput
+  autoload :ReplState
 
 
   # :section: Configuration
@@ -151,7 +153,7 @@ module ConsoleUtils
 
     def enabled_modules # :yields:
       unless block_given?
-        return to_enum(__method__) { ConsoleUtils::MODULES.size - disabled_modules.dize }
+        return to_enum(__method__) { ConsoleUtils::MODULES.size - disabled_modules.size }
       end
 
       (ConsoleUtils::MODULES - disabled_modules).each do |mod|
@@ -192,36 +194,18 @@ module ConsoleUtils
 
     # Setup enabled modules for Pry context
     def pry!
-      setup_modules_to { TOPLEVEL_BINDING.eval('self') }
+      setup_modules_to(TOPLEVEL_BINDING.eval('self'))
     end
 
     # Setup enabled modules by extending given context
-    def setup_modules_to # :yields:
-      logger.level = Logger::WARN
-
-      logger.tagged(name) do
-        unless block_given?
-          logger.warn { "Trying to setup with empty context" }
-          return
-        end
-
-        if ENV["CONSOLE_UTILS_DEBUG"] == "1"
-          logger.level = Logger::DEBUG
-          logger.debug { "Console instance: #{yield().inspect}" }
-        end
-
-        enabled_modules do |mod|
-          logger.debug { "extending with #{mod.inspect}" }
-          yield().extend(mod)
-        end
-      end
+    def setup_modules_to(context = nil)
+      ReplState.setup(context)
     end
-
   end
 
   ActiveSupport.run_load_hooks(:console_utils, self)
 end
 
-if defined?(Rails)
+if defined? Rails
   require "console_utils/railtie"
 end

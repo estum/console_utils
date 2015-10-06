@@ -10,7 +10,14 @@ module ConsoleUtils
       options = app.config.console_utils
 
       options.disabled_modules ||= ConsoleUtils.disabled_modules
-      options.disabled_modules << :ActiveRecordUtils unless defined?(ActiveRecord)
+
+      if !defined?(ActiveRecord) || !ConsoleUtils.disabled_modules.include?(:ActiveRecordUtils)
+        options.disabled_modules << :ActiveRecordUtils
+
+        ActiveSupport.on_load(:active_record) do
+          ConsoleUtils.disabled_modules.delete(:ActiveRecordUtils)
+        end
+      end
 
       ActiveSupport.on_load(:console_utils) do
         options.each { |k, v| public_send(:"#{k}=", v) }

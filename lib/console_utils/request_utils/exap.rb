@@ -5,7 +5,11 @@ module ConsoleUtils::RequestUtils #:nodoc:
     INSPECT_FORMAT = "<Local: %s (%s)>".freeze
 
     ConsoleUtils.request_methods.each do |reqm|
-      define_method(reqm) { |*args| resp_wrap(reqm, *args) }
+      define_method(reqm) do |*args|
+        @url, *@_args = args
+        app.public_send(reqm, @url, *normalize_args)
+        self
+      end
     end
 
     def to_s
@@ -28,12 +32,6 @@ module ConsoleUtils::RequestUtils #:nodoc:
 
     def response_body
       app.controller.try(:response_body) || response.try(:body)
-    end
-
-    def resp_wrap(meth, url, *args)
-      @url, @_args = url, args
-      app.send(meth, url, *normalize_args)
-      self
     end
   end
 end
