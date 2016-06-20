@@ -10,7 +10,7 @@ begin
   require "awesome_print"
 rescue LoadError
 else
-  require "awesome_print/proc" if defined?(AwesomePrint)
+  require "awesome_print/proc_ext" if defined?(AwesomePrint)
 end
 
 # = Rails Console Utils

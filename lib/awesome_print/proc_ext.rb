@@ -4,7 +4,7 @@ rescue LoadError
 end
 
 module AwesomePrint
-  module Proc
+  module ProcExt
     #:startdoc:
     def self.included(base)
       base.send :alias_method, :cast_without_proc, :cast
@@ -36,5 +36,5 @@ module AwesomePrint
 end
 
 if defined?(Sourcify) && Sourcify::VERSION >= "0.6.0.rc4"
-  AwesomePrint::Formatter.include(AwesomePrint::Proc)
+  AwesomePrint::Formatter.include(AwesomePrint::ProcExt)
 end
