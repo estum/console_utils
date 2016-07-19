@@ -7,7 +7,7 @@ require 'rdoc/task'
 
 Rake::TestTask.new do |t|
   t.libs.concat %w(console_utils spec)
-  t.pattern = "spec/*_spec.rb"
+  t.pattern = "spec/**/*_spec.rb"
 end
 
 desc 'Start the Rails console'

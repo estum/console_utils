@@ -7,7 +7,7 @@ module ConsoleUtils
     MODULE_EXTENDS_MSG     = "extending context...".freeze
 
     def self.setup(context)
-      state = context.instance_variable_get(IVAR) || ReplState.new
+      state = (context.instance_variable_defined?(IVAR) ? context.instance_variable_get(IVAR) : nil) || ReplState.new
 
       return true if state.frozen?
 

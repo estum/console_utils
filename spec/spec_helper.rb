@@ -31,3 +31,6 @@ def mock_pry(*args)
 
   output.string
 end
+
+User.delete_all
+User.create([{name: "John Doe"}, {name: "Jane Doe"}])

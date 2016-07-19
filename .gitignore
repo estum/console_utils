@@ -8,6 +8,7 @@
 /doc/
 /pkg/
 /spec/reports/
+/spec/log/
 /tmp/
 /.envrc
 /.ruby-*

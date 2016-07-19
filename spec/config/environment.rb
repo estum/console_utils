@@ -3,9 +3,10 @@ require 'rails/all'
 require 'active_support/core_ext'
 
 require 'pry-rails'
-require 'console_utils'
 
 # Initialize our test app
+
+require 'console_utils'
 
 class TestApp < Rails::Application
   config.active_support.deprecation = :log
@@ -14,47 +15,31 @@ class TestApp < Rails::Application
   config.secret_token = 'a' * 100
 
   config.root = File.expand_path('../..', __FILE__)
+  config.active_support.test_order = :random
 end
 
 TestApp.initialize!
 
 # Create in-memory database
-
 ActiveRecord::Migration.verbose = false
 
 ActiveRecord::Schema.define do
-  create_table :pokemons do |t|
+  create_table :users do |t|
     t.string :name
-    t.binary :caught
-    t.string :species
-    t.string :abilities
   end
 
-  create_table :hackers do |t|
-    t.integer :social_ability
-  end
-
-  create_table :beers do |t|
-    t.string :name
-    t.string :type
-    t.integer :rating
-    t.integer :ibu
-    t.integer :abv
+  create_table :posts do |t|
+    t.belongs_to :user
+    t.string :title
   end
 end
 
 # Define models
 
-class Beer < ActiveRecord::Base
-  belongs_to :hacker
+class User < ActiveRecord::Base
+  has_many :posts
 end
 
-class Hacker < ActiveRecord::Base
-  has_many :pokemons
-  has_many :beers
-end
-
-class Pokemon < ActiveRecord::Base
-  belongs_to :hacker
-  has_many :beers, :through => :hacker
+class Post < ActiveRecord::Base
+  belongs_to :user
 end

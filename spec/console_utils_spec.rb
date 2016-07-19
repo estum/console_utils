@@ -10,4 +10,8 @@ describe ConsoleUtils do
       ConsoleUtils.request_methods.must_include rm
     end
   end
+
+  it "shouldn't have disabled modules by default" do
+    ConsoleUtils.disabled_modules.must_be_empty
+  end
 end
