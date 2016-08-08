@@ -10,7 +10,7 @@ module ConsoleUtils::ActiveRecordUtils  #:nodoc:
       end
 
       def anyid
-        model.type_for_attribute('id').type_cast(connection.select_value(select(:id).random.limit(1)))
+        model.type_for_attribute('id').send(:cast_value, connection.select_value(select(:id).random.limit(1)))
       end
     end
 

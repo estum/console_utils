@@ -20,7 +20,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
   spec.required_ruby_version = ">= 2.1"
 
-  spec.add_dependency "activesupport", ">= 4.1", "< 5"
+  spec.add_dependency "activesupport", ">= 4.1", "< 6"
   spec.add_dependency "term-ansicolor"
   spec.add_dependency "awesome_print"
   spec.add_dependency "benchmark-ips"
