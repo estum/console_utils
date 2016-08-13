@@ -1,7 +1,7 @@
 require 'active_support'
 require 'active_support/core_ext'
 require 'active_support/tagged_logging'
-require 'term/ansicolor'
+require 'pastel'
 require 'console_utils/core_ext/array_to_proc'
 require 'console_utils/core_ext/local_values'
 require 'console_utils/version'
@@ -200,6 +200,10 @@ module ConsoleUtils
     # Setup enabled modules by extending given context
     def setup_modules_to(context = nil)
       ReplState.setup(context)
+    end
+
+    def pastel
+      @pastel ||= Pastel.new
     end
   end
 

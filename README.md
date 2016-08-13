@@ -184,7 +184,7 @@ Also provides shorthand to find any user by id: `usr(id)`
 ## OtherUtils
 
 #### clr()
-Term::ANSIColor shorthand
+[Pastel](https://github.com/piotrmurach/pastel) shorthand
 
 #### shutting(:engine_key[, to: logger_level]) {}
 Shuts up the logger of a specified Rails engine for a given key (`:rails`, `:record`, `:controller` or `:view`).

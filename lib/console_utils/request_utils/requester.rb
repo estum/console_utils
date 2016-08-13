@@ -5,10 +5,8 @@ module ConsoleUtils::RequestUtils #:nodoc:
   class Requester < SimpleDelegator
     INFO_HASH_FIELDS = %i(url size time human_size human_time).freeze
     INFO_FORMAT      = "%#-.50{url} | %#10{human_size} | %#10{human_time}\n".freeze
-    NO_RESPONSE      = Term::ANSIColor.red(" \u27A7 Empty response's body.").freeze
-    PBCOPY_MESSAGE   = Term::ANSIColor.green(" \u27A4 Response body copied to pasteboard\n").freeze
-    COMPLETE_IN      = Term::ANSIColor.green("Complete in %s").freeze
-    TRANSFERED       = Term::ANSIColor.cyan("Transfered: %s").freeze
+    NO_RESPONSE      = ConsoleUtils.pastel.red(" \u27A7 Empty response's body.").freeze
+    PBCOPY_MESSAGE   = ConsoleUtils.pastel.green(" \u27A4 Response body copied to pasteboard\n").freeze
 
     class_attribute :default_params, instance_writer: false
     attr_reader :url
@@ -54,7 +52,9 @@ module ConsoleUtils::RequestUtils #:nodoc:
     end
 
     def to_info_hash
-      INFO_HASH_FIELDS.zip(INFO_HASH_FIELDS.map(&method(:public_send))).to_h
+      hsh = {}
+      INFO_HASH_FIELDS.each { |field| hsh[field] = public_send(field) }
+      hsh
     end
 
     protected
@@ -69,18 +69,38 @@ module ConsoleUtils::RequestUtils #:nodoc:
 
     def show_complete_in!(reset = true)
       return if @_time.nil?
-      puts "=> #{COMPLETE_IN % [time_ms]}"
+      if @_code && status_code = Rack::Utils::HTTP_STATUS_CODES[@_code]
+        print "=> ", pastel.public_send(status_color(@_code), "Completed ", pastel.bold("#{@_code} #{status_code}"), " in #{time_ms}"), "\n"
+      else
+        puts "=> #{pastel.green("Completed in #{time_ms}")}"
+      end
+    ensure
+      @_code = nil
       @_time = nil
+    end
+
+    def pastel
+      ConsoleUtils.pastel
     end
 
     def show_transfered!(reset = true)
       return if @_size.nil?
-      puts "=> #{TRANSFERED % [size_downloaded]}"
+      print "=> ", pastel.cyan("Transferred: #{size_downloaded}"), "\n"
+    ensure
       @_size = nil
     end
 
+    def status_color(code)
+      case code
+      when 200...400; :green
+      when 400...500; :red
+      when 500...600; :intense_red
+      else            :yellow
+      end
+    end
+
     private_constant :PBCOPY_MESSAGE,
-                     :NO_RESPONSE, :COMPLETE_IN, :TRANSFERED,
+                     :NO_RESPONSE,
                      :INFO_FORMAT
   end
 end

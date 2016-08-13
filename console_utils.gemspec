@@ -21,7 +21,7 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = ">= 2.1"
 
   spec.add_dependency "activesupport", ">= 4.1", "< 6"
-  spec.add_dependency "term-ansicolor"
+  spec.add_dependency "pastel"
   spec.add_dependency "awesome_print"
   spec.add_dependency "benchmark-ips"
   spec.add_dependency "pry-rails"

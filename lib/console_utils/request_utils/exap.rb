@@ -4,12 +4,15 @@ module ConsoleUtils::RequestUtils #:nodoc:
   class Exap < Requester
     INSPECT_FORMAT = "<Local: %s (%s)>".freeze
 
-    ConsoleUtils.request_methods.each do |reqm|
-      define_method(reqm) do |*args|
-        @url, *@_args = args
-        app.public_send(reqm, @url, *normalize_args)
-        self
-      end
+    ConsoleUtils.request_methods.each do |request_method|
+      class_eval <<~RUBY, __FILE__, __LINE__ + 1
+        def #{request_method}(url, *args)
+          @url = url
+          @_args = args
+          app.#{request_method}(@url, *normalize_args)
+          self
+        end
+      RUBY
     end
 
     def to_s

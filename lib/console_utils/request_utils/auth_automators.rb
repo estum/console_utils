@@ -1,7 +1,6 @@
 module ConsoleUtils::RequestUtils
   class DefaultAuthAutomator
     def self.call(rq)
-      p rq
       if rq.can_auto_auth?
         rq.params[ConsoleUtils.token_param] ||= ConsoleUtils.default_token.presence || ConsoleUtils.auto_token_for(rq.uid)
       end

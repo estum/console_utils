@@ -1,8 +1,8 @@
 module ConsoleUtils #:nodoc:
   module OtherUtils
-    # <tt>Term::ANSIColor</tt> shorthand
+    # <tt>Pastel</tt> shorthand
     def clr
-      Term::ANSIColor
+      ConsoleUtils.pastel
     end
 
     # :call-seq:
