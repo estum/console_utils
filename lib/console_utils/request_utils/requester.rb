@@ -60,9 +60,9 @@ module ConsoleUtils::RequestUtils #:nodoc:
     protected
 
     def normalize_args
-      RequestParams.new(*@_args).with_default(default_params).tap do |args|
-        ConsoleUtils.logger.debug { args }
-      end
+      params = RequestParams.new(*@_args).with_default(default_params)
+      ConsoleUtils.logger.debug { params.to_a }
+      params
     end
 
     private

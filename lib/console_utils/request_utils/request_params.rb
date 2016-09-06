@@ -39,7 +39,7 @@ module ConsoleUtils::RequestUtils
         headers.merge!(default_headers.to_h)
       end
 
-      to_a
+      self
     end
 
     def can_auto_auth?
