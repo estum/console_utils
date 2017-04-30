@@ -9,7 +9,7 @@ module ConsoleUtils::RequestUtils #:nodoc:
         def #{request_method}(url, *args)
           @url = url
           @_args = args
-          app.#{request_method}(@url, *normalize_args.to_a)
+          app.request_via_redirect(:#{request_method}, @url, *normalize_args.to_a)
           self
         end
       RUBY
