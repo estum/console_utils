@@ -6,7 +6,7 @@ module ConsoleUtils #:nodoc:
 
     def self.extended(mod)
       ActiveSupport.on_load(:active_record) do
-        ActiveRecord::Relation.send(:include, RandomRecord::FinderMethods)
+        ActiveRecord::Relation.send(:prepend, RandomRecord::FinderMethods)
         ActiveRecord::Base.send(:extend, RandomRecord::Querying)
       end
     end

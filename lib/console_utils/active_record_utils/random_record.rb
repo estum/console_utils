@@ -9,8 +9,16 @@ module ConsoleUtils::ActiveRecordUtils  #:nodoc:
         random.first
       end
 
-      def anyid
-        model.type_for_attribute('id').send(:cast_value, connection.select_value(select(:id).random.limit(1)))
+      def anyid(n = nil)
+        if n
+          @_anyid_history[-n.abs].presence || anyid()
+        else
+          idval = connection.select_value(select(:id).random.limit(1))
+          model.type_for_attribute('id').send(:cast_value, idval).tap do |result|
+            (@_anyid_history ||= []) << result
+            @_anyid_history.shift if @_anyid_history.size > 10
+          end
+        end
       end
     end
 
