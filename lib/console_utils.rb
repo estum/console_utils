@@ -140,6 +140,12 @@ module ConsoleUtils
   # which is useful when using the +simple_token_automator+ gem.
   mattr_accessor(:auth_automator) { ConsoleUtils::RequestUtils::DefaultAuthAutomator }
 
+  # :attr:
+  # Keeps any amount of callable objects to invoke them before each request,
+  # with an instance of <tt>ConsoleUtils::RequestUtils::RequestParams</tt>
+  # as only the argument.
+  # (default: <tt>[]</tt>)
+  mattr_accessor(:request_hooks) { [] }
 
   # :section: Class Methods
 

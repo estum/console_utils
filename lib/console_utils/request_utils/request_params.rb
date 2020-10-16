@@ -1,29 +1,23 @@
+# frozen_string_literal: true
+
 module ConsoleUtils::RequestUtils
+  RequestParams = Struct.new(:params, :headers)
+
   class RequestParams
+    AutoUid = -> (uid) do
+      ConsoleUtils.request_auto_auth && ((uid.nil? || uid == true) ? ConsoleUtils.default_uid : uid)
+    end
+
     attr_accessor :uid
 
-    def initialize(uid_or_params = true, params = nil, headers = nil)
-      # puts "Request params: uid_or_params=#{uid_or_params} | params=#{params} | headers=#{headers}"
+    def initialize(uid = true, params = nil, headers = nil)
+      params, headers, uid = [uid, params, nil] if uid.is_a?(Hash)
+      @uid = AutoUid[uid] || uid
+      super(params.to_h, headers.to_h)
 
-      if uid_or_params.is_a? Hash
-        headers, params, uid_or_params = [params, uid_or_params, nil]
-      end
-
-      @params  = params  if params
-      @headers = headers if headers
-      @uid = auto_auth? && ((uid_or_params.nil? || uid_or_params == true) ? ConsoleUtils.default_uid : uid_or_params)
-
-      ConsoleUtils.logger.debug { "#{uid}, #{params()}, #{headers()}" }
-
-      auth_automator.(self)
-    end
-
-    def params
-      @params ||= {}
-    end
-
-    def headers
-      @headers ||= {}
+      ConsoleUtils.auth_automator.(self) if ConsoleUtils.auth_automator.respond_to?(:call)
+      ConsoleUtils.request_hooks.each { |hook| hook.(self) }
+      ConsoleUtils.logger.debug { "#{@uid}, #{self}" }
     end
 
     def to_a
@@ -43,17 +37,7 @@ module ConsoleUtils::RequestUtils
     end
 
     def can_auto_auth?
-      auto_auth? && uid && auth_automator.respond_to?(:call)
-    end
-
-    private
-
-    def auto_auth?
-      ConsoleUtils.request_auto_auth
-    end
-
-    def auth_automator
-      ConsoleUtils.auth_automator
+      ConsoleUtils.request_auto_auth && @uid && ConsoleUtils.auth_automator.respond_to?(:call)
     end
   end
 end
