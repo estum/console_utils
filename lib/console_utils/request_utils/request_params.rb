@@ -10,7 +10,8 @@ module ConsoleUtils::RequestUtils
 
     attr_accessor :uid
 
-    def initialize(uid = true, params = nil, headers = nil)
+    def initialize(uid = true, *rest, params: nil, headers: nil)
+      params, headers = rest if params.nil? && headers.nil? && rest.size > 0
       params, headers, uid = [uid, params, nil] if uid.is_a?(Hash)
       @uid = AutoUid[uid] || uid
       super(params.to_h, headers.to_h)
