@@ -14,7 +14,7 @@ module ConsoleUtils::RequestUtils
       params, headers = rest if params.nil? && headers.nil? && rest.size > 0
       params, headers, uid = [uid, params, nil] if uid.is_a?(Hash)
       @uid = AutoUid[uid] || uid
-      super(params.to_h, headers.to_h)
+      super(params, headers.to_h)
 
       ConsoleUtils.auth_automator.(self) if ConsoleUtils.auth_automator.respond_to?(:call)
       ConsoleUtils.request_hooks.each { |hook| hook.(self) }
