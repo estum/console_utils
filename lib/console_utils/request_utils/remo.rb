@@ -62,7 +62,7 @@ module ConsoleUtils::RequestUtils #:nodoc:
     end
 
     def params_to_query?
-       ["GET", "HEAD"].include?(@request_method) || @request_method.headers["Content-Type"] != "application/json"
+       ["GET", "HEAD"].include?(@request_method) || @request_params.headers["Content-Type"] != "application/json"
     end
 
     class Curl

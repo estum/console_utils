@@ -18,9 +18,9 @@ Gem::Specification.new do |spec|
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(spec)/}) }
   spec.require_paths = ["lib"]
-  spec.required_ruby_version = ">= 2.1"
+  spec.required_ruby_version = ">= 3.0"
 
-  spec.add_dependency "activesupport", ">= 5.2", "< 7"
+  spec.add_dependency "activesupport"
   spec.add_dependency "pastel"
   spec.add_dependency "awesome_print"
   spec.add_dependency "benchmark-ips"

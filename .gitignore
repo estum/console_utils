@@ -9,6 +9,7 @@
 /pkg/
 /spec/reports/
 /spec/log/
+/spec/tmp/
 /tmp/
 /.envrc
 /.ruby-*

@@ -4,7 +4,7 @@ ConsoleUtils::ActiveRecordUtils.extended(nil)
 
 describe ConsoleUtils::ActiveRecordUtils::RandomRecord::FinderMethods do
   it 'should return random record' do
-    User.anyone.must_be_kind_of(ActiveRecord::Base)
+    _(User.anyone).must_be_kind_of(ActiveRecord::Base)
   end
 
   it 'should return random record id' do
