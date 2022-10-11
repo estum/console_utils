@@ -102,7 +102,7 @@ module ConsoleUtils
 
   # :attr:
   # Command for +jq+ json formatter (default: <tt>"jq . -C"</tt>)
-  mattr_accessor(:jq_command) { "jq . -C" }
+  mattr_accessor(:jq_command) { %w[jq -C] }
 
   # :attr:
   # Binary path to +curl+ (using in remote requests). (default: <tt>"curl"</tt>)

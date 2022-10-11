@@ -11,9 +11,9 @@ module ConsoleUtils::RequestUtils #:nodoc:
     class_attribute :default_params, instance_writer: false
     attr_reader :url
 
-    def preview(mth = nil)
+    def preview(*args, **opts)
       if output = to_s.presence
-        ConsoleUtils::JSONOutput.formatter.(output)
+        ConsoleUtils::JSONOutput.formatter.(output, *args, **opts)
         show_complete_in!
         show_transfered!
         yield(self) if block_given?
@@ -94,7 +94,7 @@ module ConsoleUtils::RequestUtils #:nodoc:
       case code
       when 200...400; :green
       when 400...500; :red
-      when 500...600; :intense_red
+      when 500...600; :bright_red
       else            :yellow
       end
     end

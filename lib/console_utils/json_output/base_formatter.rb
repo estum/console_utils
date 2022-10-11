@@ -5,8 +5,8 @@ module ConsoleUtils
       include Singleton
 
       # Prints formatted JSON to stdout.
-      def call(body) # :yields:
-        formatted = format_with_fallback(body)
+      def call(body, *args, **options) # :yields:
+        formatted = format_with_fallback(body, args: args, **options)
         if block_given?
           yield(formatted)
         else
@@ -15,12 +15,12 @@ module ConsoleUtils
       end
 
       # Formats a given JSON string
-      def format(body)
+      def format(body, **opts)
         raise NotImplementedError
       end
 
-      def format_with_fallback(body)
-        format(body)
+      def format_with_fallback(body, **opts)
+        format(body, **opts)
       rescue ParseError => error
         warn error
         return body.to_s
