@@ -22,7 +22,6 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "activesupport", ">= 5.2", "< 7"
   spec.add_dependency "pastel"
-  spec.add_dependency "awesome_print"
   spec.add_dependency "benchmark-ips"
   spec.add_dependency "pry-rails"
   # spec.add_dependency 'sourcify', '~> 0.6.0.rc4'

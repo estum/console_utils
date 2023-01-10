@@ -6,13 +6,6 @@ require 'console_utils/core_ext/array_to_proc'
 require 'console_utils/core_ext/local_values'
 require 'console_utils/version'
 
-begin
-  require "awesome_print"
-rescue LoadError
-else
-  require "awesome_print/proc_ext" if defined?(AwesomePrint)
-end
-
 # = Rails Console Utils
 # Collection of utilities to use in Rails Console.
 #
